@@ -1,0 +1,12 @@
+{
+  "name": "רשימת קניות משפחתית",
+  "short_name": "קניות",
+  "description": "אפליקציית קניות משפחתית פשוטה לניהול רשימה בדפדפן",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f4f7fb",
+  "theme_color": "#111827",
+  "lang": "he",
+  "dir": "rtl",
+  "icons": []
+}
