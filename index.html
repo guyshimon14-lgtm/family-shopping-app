@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#111827" />
+    <meta
+      name="description"
+      content="אפליקציית קניות משפחתית פשוטה לניהול רשימה משותפת"
+    />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>רשימת קניות משפחתית</title>
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero" aria-labelledby="app-title">
+        <div>
+          <p class="eyebrow">Family Shopping App</p>
+          <h1 id="app-title">רשימת קניות משפחתית</h1>
+          <p class="subtitle">
+            גרסת MVP ראשונה: מוסיפים פריטים, מסמנים מה נקנה, ושומרים הכול בדפדפן.
+          </p>
+        </div>
+        <div class="hero-card" aria-label="סטטוס הרשימה">
+          <span id="remaining-count" class="hero-number">0</span>
+          <span>פריטים פתוחים</span>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="add-item-title">
+        <h2 id="add-item-title">הוספת פריט</h2>
+        <form id="item-form" class="item-form">
+          <label>
+            מה צריך לקנות?
+            <input
+              id="item-name"
+              name="name"
+              type="text"
+              placeholder="לדוגמה: חלב, לחם, טיטולים"
+              autocomplete="off"
+              required
+            />
+          </label>
+
+          <label>
+            כמות
+            <input
+              id="item-quantity"
+              name="quantity"
+              type="text"
+              placeholder="1, 2 קילו, מארז..."
+              autocomplete="off"
+            />
+          </label>
+
+          <label>
+            קטגוריה
+            <select id="item-category" name="category">
+              <option>כללי</option>
+              <option>ירקות ופירות</option>
+              <option>מוצרי חלב</option>
+              <option>לחם ומאפים</option>
+              <option>בשר ודגים</option>
+              <option>ניקיון</option>
+              <option>תינוקות</option>
+              <option>פארם</option>
+            </select>
+          </label>
+
+          <label>
+            חנות / הערה
+            <input
+              id="item-note"
+              name="note"
+              type="text"
+              placeholder="רמי לוי, סופר־פארם, מבצע..."
+              autocomplete="off"
+            />
+          </label>
+
+          <button type="submit" class="primary-button">הוסף לרשימה</button>
+        </form>
+      </section>
+
+      <section class="toolbar" aria-label="פעולות רשימה">
+        <div class="filters" role="group" aria-label="סינון פריטים">
+          <button class="filter-button active" type="button" data-filter="all">הכול</button>
+          <button class="filter-button" type="button" data-filter="open">פתוחים</button>
+          <button class="filter-button" type="button" data-filter="done">נקנו</button>
+        </div>
+        <div class="actions">
+          <button id="share-button" class="secondary-button" type="button">שתף רשימה</button>
+          <button id="clear-done-button" class="secondary-button danger" type="button">נקה נקנו</button>
+        </div>
+      </section>
+
+      <section class="panel list-panel" aria-labelledby="shopping-list-title">
+        <div class="list-header">
+          <div>
+            <h2 id="shopping-list-title">הרשימה</h2>
+            <p id="summary" class="muted">אין עדיין פריטים.</p>
+          </div>
+          <span class="local-badge">שמירה מקומית</span>
+        </div>
+
+        <div id="empty-state" class="empty-state">
+          <strong>הרשימה ריקה.</strong>
+          <span>הוסיפו פריט ראשון כדי להתחיל.</span>
+        </div>
+
+        <ul id="shopping-list" class="shopping-list" aria-live="polite"></ul>
+      </section>
+    </main>
+
+    <template id="item-template">
+      <li class="shopping-item">
+        <label class="check-row">
+          <input class="item-checkbox" type="checkbox" />
+          <span class="item-main">
+            <span class="item-name"></span>
+            <span class="item-meta"></span>
+          </span>
+        </label>
+        <button class="remove-button" type="button" aria-label="מחיקת פריט">×</button>
+      </li>
+    </template>
+
+    <script src="app.js" type="module"></script>
+  </body>
+</html>
