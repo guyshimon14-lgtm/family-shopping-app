@@ -78,7 +78,7 @@ const weekdayMap = new Map([
 
 const ADMIN_EMAIL_PREFIX = "guyshimon14";
 const firebaseConfig = {
-  apiKey: "AIzaSyCImYQXWRQEHSTXTpYoWfnQAzUkBZ-opgI",
+  apiKey: "AIzaSyCIhY0XWRQEHSTXTPyOWfnQAzUkBZ-opgI",
   authDomain: "family-app-205e1.firebaseapp.com",
   projectId: "family-app-205e1",
   storageBucket: "family-app-205e1.firebasestorage.app",
