@@ -29,7 +29,7 @@ form.addEventListener("submit", (event) => {
   }
 
   items.unshift({
-    id: crypto.randomUUID(),
+    id: createId(),
     name,
     quantity: quantityInput.value.trim(),
     category: categoryInput.value,
@@ -72,19 +72,21 @@ shareButton.addEventListener("click", async () => {
     return;
   }
 
-  if (navigator.share) {
-    await navigator.share({
-      title: "רשימת קניות משפחתית",
-      text,
-    });
-    return;
-  }
+  try {
+    if (navigator.share) {
+      await navigator.share({
+        title: "רשימת קניות משפחתית",
+        text,
+      });
+      return;
+    }
 
-  await navigator.clipboard.writeText(text);
-  shareButton.textContent = "הועתק";
-  window.setTimeout(() => {
-    shareButton.textContent = "שתף רשימה";
-  }, 1400);
+    await navigator.clipboard.writeText(text);
+    showTemporaryShareMessage("הועתק");
+  } catch (error) {
+    console.warn("Could not share shopping list", error);
+    showTemporaryShareMessage("לא ניתן לשתף");
+  }
 });
 
 function render() {
@@ -171,6 +173,22 @@ function buildShareText(itemsToShare) {
   });
 
   return [`רשימת קניות משפחתית:`, ...lines].join("\n");
+}
+
+function showTemporaryShareMessage(message) {
+  const originalText = "שתף רשימה";
+  shareButton.textContent = message;
+  window.setTimeout(() => {
+    shareButton.textContent = originalText;
+  }, 1400);
+}
+
+function createId() {
+  if (crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+
+  return `item-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
 function loadItems() {
