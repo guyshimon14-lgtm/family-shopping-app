@@ -19,7 +19,7 @@
           <p class="eyebrow">Family Shopping App</p>
           <h1 id="app-title">רשימת קניות משפחתית</h1>
           <p class="subtitle">
-            גרסת MVP ראשונה: מוסיפים פריטים, מסמנים מה נקנה, ושומרים הכול בדפדפן.
+            מוסיפים מוצר וכמות, מסמנים מה נקנה, ושומרים הכול בדפדפן.
           </p>
         </div>
         <div class="hero-card" aria-label="סטטוס הרשימה">
@@ -29,10 +29,17 @@
       </section>
 
       <section class="panel" aria-labelledby="add-item-title">
-        <h2 id="add-item-title">הוספת פריט</h2>
+        <div class="section-title-row">
+          <h2 id="add-item-title">הוספת מוצר</h2>
+          <button id="voice-button" class="voice-button" type="button" aria-label="הוספה קולית">
+            🎙️ הוספה קולית
+          </button>
+        </div>
+        <p id="voice-status" class="voice-status" aria-live="polite"></p>
+
         <form id="item-form" class="item-form">
           <label>
-            מה צריך לקנות?
+            מוצר
             <input
               id="item-name"
               name="name"
@@ -50,31 +57,6 @@
               name="quantity"
               type="text"
               placeholder="1, 2 קילו, מארז..."
-              autocomplete="off"
-            />
-          </label>
-
-          <label>
-            קטגוריה
-            <select id="item-category" name="category">
-              <option>כללי</option>
-              <option>ירקות ופירות</option>
-              <option>מוצרי חלב</option>
-              <option>לחם ומאפים</option>
-              <option>בשר ודגים</option>
-              <option>ניקיון</option>
-              <option>תינוקות</option>
-              <option>פארם</option>
-            </select>
-          </label>
-
-          <label>
-            חנות / הערה
-            <input
-              id="item-note"
-              name="note"
-              type="text"
-              placeholder="רמי לוי, סופר־פארם, מבצע..."
               autocomplete="off"
             />
           </label>
@@ -106,7 +88,7 @@
 
         <div id="empty-state" class="empty-state">
           <strong>הרשימה ריקה.</strong>
-          <span>הוסיפו פריט ראשון כדי להתחיל.</span>
+          <span>הוסיפו מוצר ראשון כדי להתחיל.</span>
         </div>
 
         <ul id="shopping-list" class="shopping-list" aria-live="polite"></ul>
