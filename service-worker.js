@@ -1,4 +1,4 @@
-const CACHE_NAME = "family-app-v1-2026-07-08";
+const CACHE_NAME = "family-app-v1-2026-07-09-firebase";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -26,6 +26,20 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  const url = new URL(event.request.url);
+  const shouldRefreshFirst = url.pathname.endsWith("/app.js") || url.pathname.endsWith("/index.html") || url.pathname === "/";
+  if (shouldRefreshFirst) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          return response;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
