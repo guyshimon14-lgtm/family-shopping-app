@@ -2,112 +2,149 @@
 <html lang="he" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#111827" />
-    <meta
-      name="description"
-      content="אפליקציית קניות משפחתית פשוטה לניהול רשימה משותפת"
-    />
-    <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="stylesheet" href="styles.css" />
-    <title>רשימת קניות משפחתית</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0f766e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Family" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="description" content="אפליקציית משפחה פרטית לקניות ותחזוקה" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Family</title>
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icon.svg" />
+    <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <main class="app-shell">
-      <section class="hero" aria-labelledby="app-title">
-        <div>
-          <p class="eyebrow">Family Shopping App</p>
-          <h1 id="app-title">רשימת קניות משפחתית</h1>
-          <p class="subtitle">
-            מוסיפים מוצר וכמות, מסמנים מה נקנה, ושומרים הכול בדפדפן.
-          </p>
-        </div>
-        <div class="hero-card" aria-label="סטטוס הרשימה">
-          <span id="remaining-count" class="hero-number">0</span>
-          <span>פריטים פתוחים</span>
-        </div>
-      </section>
-
-      <section class="panel" aria-labelledby="add-item-title">
-        <div class="section-title-row">
-          <h2 id="add-item-title">הוספת מוצר</h2>
-          <button id="voice-button" class="voice-button" type="button" aria-label="הוספה קולית">
-            🎙️ הוספה קולית
-          </button>
-        </div>
-        <p id="voice-status" class="voice-status" aria-live="polite"></p>
-
-        <form id="item-form" class="item-form">
-          <label>
-            מוצר
-            <input
-              id="item-name"
-              name="name"
-              type="text"
-              placeholder="לדוגמה: חלב, לחם, טיטולים"
-              autocomplete="off"
-              required
-            />
-          </label>
-
-          <label>
-            כמות
-            <input
-              id="item-quantity"
-              name="quantity"
-              type="text"
-              placeholder="1, 2 קילו, מארז..."
-              autocomplete="off"
-            />
-          </label>
-
-          <button type="submit" class="primary-button">הוסף לרשימה</button>
-        </form>
-      </section>
-
-      <section class="toolbar" aria-label="פעולות רשימה">
-        <div class="filters" role="group" aria-label="סינון פריטים">
-          <button class="filter-button active" type="button" data-filter="all">הכול</button>
-          <button class="filter-button" type="button" data-filter="open">פתוחים</button>
-          <button class="filter-button" type="button" data-filter="done">נקנו</button>
-        </div>
-        <div class="actions">
-          <button id="share-button" class="secondary-button" type="button">שתף רשימה</button>
-          <button id="clear-done-button" class="secondary-button danger" type="button">נקה נקנו</button>
-        </div>
-      </section>
-
-      <section class="panel list-panel" aria-labelledby="shopping-list-title">
-        <div class="list-header">
+      <section class="phone">
+        <header class="topbar">
           <div>
-            <h2 id="shopping-list-title">הרשימה</h2>
-            <p id="summary" class="muted">אין עדיין פריטים.</p>
+            <p class="eyebrow">Family</p>
+            <h1>הבית שלנו</h1>
           </div>
-          <span class="local-badge">שמירה מקומית</span>
-        </div>
+          <button class="sign-out-button" id="signOutButton" type="button" hidden>יציאה</button>
+        </header>
 
-        <div id="empty-state" class="empty-state">
-          <strong>הרשימה ריקה.</strong>
-          <span>הוסיפו מוצר ראשון כדי להתחיל.</span>
-        </div>
+        <section class="auth-card" id="authCard">
+          <strong>כניסה למשפחה</strong>
+          <span>הכניסה פתוחה רק לשלושת המשתמשים שהוגדרו ב-Firebase.</span>
+          <form class="auth-form" id="authForm">
+            <label>
+              אימייל
+              <input id="emailInput" type="email" autocomplete="email" required />
+            </label>
+            <label>
+              סיסמה
+              <input id="passwordInput" type="password" autocomplete="current-password" required />
+            </label>
+            <button class="primary-button" type="submit">כניסה</button>
+          </form>
+          <div class="message" id="authMessage" hidden></div>
+        </section>
 
-        <ul id="shopping-list" class="shopping-list" aria-live="polite"></ul>
+        <nav class="tabs" id="tabsNav" aria-label="ניווט" hidden>
+          <button class="tab active" data-view="shopping" type="button">קניות</button>
+          <button class="tab" data-view="maintenance" type="button">תחזוקה</button>
+        </nav>
+
+        <section class="view active" id="shoppingView" hidden>
+          <section class="status-card" id="listStatus">
+            <div>
+              <strong id="statusTitle">הרשימה פתוחה</strong>
+              <span id="statusText">אפשר להוסיף מוצרים בקול או בהקלדה.</span>
+              <span class="deadline-line" id="deadlineLine" hidden></span>
+            </div>
+            <div class="manager-wrap" id="managerWrap" hidden>
+              <button class="manager-button" id="managerButton" type="button">מנהל</button>
+              <div class="manager-actions" id="managerActions" hidden>
+                <button class="secondary-button" id="closeDeadlineButton" type="button">מועד סגירה</button>
+                <button class="secondary-button" id="openListButton" type="button">פתיחת הרשימה</button>
+                <button class="secondary-button" id="adminMissingButton" type="button">רשימת החוסרים</button>
+                <div class="access-requests" id="accessRequestsList" hidden></div>
+              </div>
+              <div class="shortages-list" id="shortagesList" hidden></div>
+            </div>
+            <button class="request-open-button" id="requestOpenButton" type="button" hidden>בקש פתיחה</button>
+            <textarea id="adminCommandText" hidden></textarea>
+          </section>
+
+          <section class="voice-card">
+            <div class="voice-control">
+              <strong id="voiceLabel">מה אתם רוצים לקנות?</strong>
+              <div class="voice-actions">
+                <button class="voice-button" id="voiceButton" type="button">דבר</button>
+              </div>
+            </div>
+            <textarea id="speechText" hidden></textarea>
+            <div class="message" id="messageBox" hidden></div>
+          </section>
+
+          <section class="confirm-card" id="confirmCard" hidden>
+            <strong>לאשר העלאה לרשימה?</strong>
+            <div class="confirm-list" id="confirmList"></div>
+            <button class="secondary-button cancel-all-button" id="cancelItemsButton" type="button">בטל הכל</button>
+          </section>
+
+          <section class="duplicate-card" id="duplicateCard" hidden>
+            <div>
+              <strong id="duplicateTitle"></strong>
+              <span id="duplicateText"></span>
+            </div>
+            <div class="duplicate-actions">
+              <button class="primary-button" id="confirmDuplicateButton" type="button">כן, להוסיף</button>
+              <button class="secondary-button" id="cancelDuplicateButton" type="button">בטל</button>
+            </div>
+          </section>
+
+          <section class="shopping-list" id="shoppingList" aria-live="polite"></section>
+        </section>
+
+        <section class="view" id="maintenanceView" hidden>
+          <section class="maintenance-hero">
+            <strong>תחזוקה</strong>
+            <span>כאן נבנה בהמשך תקלות בבית, משימות, אחראי, תאריך יעד ואישור מנהל.</span>
+          </section>
+          <section class="maintenance-list">
+            <article>
+              <strong>מזגן בסלון</strong>
+              <span>דוגמה למשימה פתוחה</span>
+            </article>
+            <article>
+              <strong>להחליף נורה</strong>
+              <span>דוגמה למשימה שממתינה לשיבוץ</span>
+            </article>
+          </section>
+        </section>
       </section>
     </main>
 
-    <template id="item-template">
-      <li class="shopping-item">
-        <label class="check-row">
-          <input class="item-checkbox" type="checkbox" />
-          <span class="item-main">
-            <span class="item-name"></span>
-            <span class="item-meta"></span>
-          </span>
-        </label>
-        <button class="remove-button" type="button" aria-label="מחיקת פריט">×</button>
-      </li>
+    <template id="categoryTemplate">
+      <section class="category">
+        <h2></h2>
+        <div class="items"></div>
+      </section>
     </template>
 
-    <script src="app.js" type="module"></script>
+    <template id="itemTemplate">
+      <article class="item">
+        <div class="item-main">
+          <strong></strong>
+          <span></span>
+        </div>
+        <div class="status-actions">
+          <button class="bought-button" type="button">נקנה</button>
+          <button class="missing-button" type="button">חסר</button>
+        </div>
+        <div class="item-actions">
+          <img class="item-photo" alt="" hidden />
+          <input class="photo-input" type="file" accept="image/*" hidden />
+          <button class="photo-button" type="button">+ תמונה</button>
+          <button class="remove-button" type="button">הסר</button>
+        </div>
+      </article>
+    </template>
+
+    <script src="./app.js"></script>
   </body>
 </html>

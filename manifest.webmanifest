@@ -1,12 +1,22 @@
 {
-  "name": "רשימת קניות משפחתית",
-  "short_name": "קניות",
-  "description": "אפליקציית קניות משפחתית פשוטה לניהול רשימה בדפדפן",
-  "start_url": ".",
+  "name": "Family",
+  "short_name": "Family",
+  "id": "/",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#f4f7fb",
-  "theme_color": "#111827",
-  "lang": "he",
   "dir": "rtl",
-  "icons": []
+  "lang": "he",
+  "description": "אפליקציית משפחה פרטית לקניות ותחזוקה",
+  "background_color": "#edf2f1",
+  "theme_color": "#0f766e",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }
