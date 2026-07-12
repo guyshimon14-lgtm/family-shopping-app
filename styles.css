@@ -364,6 +364,11 @@ textarea {
   color: var(--ink);
 }
 
+.manual-add-button {
+  width: 100%;
+  margin-top: 8px;
+}
+
 .ghost-button {
   white-space: nowrap;
 }

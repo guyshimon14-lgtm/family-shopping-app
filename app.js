@@ -119,6 +119,7 @@ const els = {
   speechText: document.querySelector("#speechText"),
   voiceButton: document.querySelector("#voiceButton"),
   voiceLabel: document.querySelector("#voiceLabel"),
+  manualAddButton: document.querySelector("#manualAddButton"),
   requestOpenButton: document.querySelector("#requestOpenButton"),
   messageBox: document.querySelector("#messageBox"),
   duplicateCard: document.querySelector("#duplicateCard"),
@@ -148,6 +149,7 @@ let shoppingRecognition = null;
 let adminRecognition = null;
 let shoppingIsListening = false;
 let adminIsListening = false;
+let shoppingVoiceFallbackOnly = false;
 
 function getActiveUser() {
   if (currentUser) {
@@ -738,21 +740,43 @@ function configureRecognition(target, button, label, idleText, onDone, options =
     if (gotResult && onDone) onDone();
     gotResult = false;
   });
-  recognition.addEventListener("error", () => {
+  recognition.addEventListener("error", (event) => {
     button.classList.remove("listening");
     button.textContent = idleText;
     if (button === els.voiceButton) shoppingIsListening = false;
     if (button === els.managerButton) adminIsListening = false;
-    showMessage("המיקרופון לא זמין כרגע. אפשר להקליד את אותו משפט.");
+    if (button === els.voiceButton) {
+      shoppingVoiceFallbackOnly = true;
+      showDictationFallback();
+    }
+    const errorText = event.error === "not-allowed"
+      ? "צריך לאשר הרשאת מיקרופון לדפדפן. בינתיים אפשר להכתיב דרך שדה הטקסט."
+      : "המיקרופון לא זמין כרגע. אפשר להכתיב דרך שדה הטקסט וללחוץ הוסף לאישור.";
+    showMessage(errorText);
   });
   return recognition;
 }
 
+function showDictationFallback() {
+  els.speechText.hidden = false;
+  els.manualAddButton.hidden = false;
+  els.speechText.rows = 2;
+  els.speechText.placeholder = "לחצו כאן, ואז באייפון לחצו על המיקרופון במקלדת והכתיבו: 2 מלפפונים";
+  els.voiceButton.textContent = "הכתבה";
+  setTimeout(() => els.speechText.focus(), 0);
+}
+
 function toggleRecognition(recognition, button, listeningText, idleText, fallback, kind) {
   hideMessage();
+  if (kind === "shopping" && shoppingVoiceFallbackOnly) {
+    showDictationFallback();
+    showMessage("באייפון משתמשים במיקרופון של המקלדת: לחץ בשדה הטקסט, לחץ על סמל המיקרופון במקלדת, ואז הוסף לאישור.");
+    return;
+  }
   if (!recognition) {
+    if (kind === "shopping") showDictationFallback();
     fallback.focus();
-    showMessage("בדפדפן הזה אין זיהוי קול. אפשר להקליד וללחוץ הוסף.");
+    showMessage("בדפדפן הזה אין זיהוי קול מובנה. באייפון לחצו בשדה הטקסט ואז על המיקרופון במקלדת.");
     return;
   }
 
@@ -1019,6 +1043,7 @@ els.tabs.forEach((tab) => {
 els.confirmDuplicateButton.addEventListener("click", confirmDuplicate);
 els.cancelDuplicateButton.addEventListener("click", cancelDuplicate);
 els.cancelItemsButton.addEventListener("click", cancelPendingItems);
+els.manualAddButton.addEventListener("click", addFromInput);
 els.adminMissingButton.addEventListener("click", toggleMissingList);
 els.openListButton.addEventListener("click", openListNow);
 els.requestOpenButton.addEventListener("click", requestOpenAccess);
@@ -1037,6 +1062,8 @@ els.adminCommandText.addEventListener("keydown", (event) => {
 
 shoppingRecognition = configureRecognition(els.speechText, els.voiceButton, els.voiceButton, "דבר", addFromInput, { continuous: true });
 adminRecognition = configureRecognition(els.adminCommandText, els.managerButton, els.managerButton, "מנהל", applyAdminCommand);
+
+if (!shoppingRecognition) showDictationFallback();
 
 els.voiceButton.addEventListener("click", () => toggleRecognition(shoppingRecognition, els.voiceButton, "הוסף מוצרים לאישור", "דבר", els.speechText, "shopping"));
 els.closeDeadlineButton.addEventListener("click", () => toggleRecognition(adminRecognition, els.managerButton, "מקשיב...", "מנהל", els.adminCommandText, "admin"));
